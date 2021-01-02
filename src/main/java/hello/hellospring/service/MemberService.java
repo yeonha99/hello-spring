@@ -22,12 +22,18 @@ public class MemberService {
     }//generate누르고 controctor하기
 
     //회원가입
-    public Long join(Member member){
-        validateDuplicateMember(member);//중복회원 검증
-        memberRepository.save(member);
-        return member.getId();
+    public Long join(Member member) {
+        long start = System.currentTimeMillis();
+        try {
+            validateDuplicateMember(member);//중복회원 검증
+            memberRepository.save(member);
+            return member.getId();
+        }finally {
+            long finish=System.currentTimeMillis();
+            long timeMs=finish-start;
+            System.out.println("join = "+timeMs+"ms");
+        }
     }
-
     private void validateDuplicateMember(Member member) {
         memberRepository.findByName(member.getName())
                     .ifPresent(member1 -> {
@@ -35,7 +41,15 @@ public class MemberService {
         });
     }
     public List<Member> findMembers(){
-        return memberRepository.findAll();
+        long start = System.currentTimeMillis();
+        try {
+            return memberRepository.findAll();
+        }finally {
+            long finish=System.currentTimeMillis();
+            long timeMs=finish-start;
+            System.out.println("join = "+timeMs+"ms");
+        }
+
     }
     public Optional<Member> findOne(Long memberid){
         return memberRepository.findByid(memberid);
